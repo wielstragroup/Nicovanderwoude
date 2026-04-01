@@ -131,39 +131,8 @@
     </p>
   </footer>
 
-  <!-- ========== FIREBASE SDK (via CDN) ========== -->
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
-
-  <!-- Firebase configuratie en initialisatie -->
-  <script src="js/firebase-config.js"></script>
-
-  <!-- Hoofd applicatielogica -->
-  <script src="js/app.js"></script>
-
-  <!-- Jaar in footer dynamisch instellen -->
-  <script>
-    document.getElementById('year').textContent = new Date().getFullYear();
-
-    // Hamburger menu toggle voor mobiel
-    const hamburgerBtn  = document.getElementById('hamburger-btn');
-    const navbarLinks   = document.getElementById('navbar-links');
-
-    hamburgerBtn.addEventListener('click', () => {
-      const isOpen = navbarLinks.classList.toggle('open');
-      hamburgerBtn.setAttribute('aria-expanded', isOpen);
-    });
-
-    // Menu sluiten wanneer buiten geklikt wordt
-    document.addEventListener('click', e => {
-      if (!hamburgerBtn.contains(e.target) && !navbarLinks.contains(e.target)) {
-        navbarLinks.classList.remove('open');
-        hamburgerBtn.setAttribute('aria-expanded', 'false');
-      }
-    });
-  </script>
+  <!-- ========== SCRIPTS ========== -->
+  <script type="module" src="/js/app.js"></script>
 
 </body>
 </html>

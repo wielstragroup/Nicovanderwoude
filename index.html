@@ -70,41 +70,8 @@
     </p>
   </footer>
 
-  <!-- ========== FIREBASE SDK (via CDN) ========== -->
-  <!-- Alleen nodig voor de admin-link zichtbaarheid -->
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
-
-  <!-- Firebase configuratie en initialisatie -->
-  <script src="js/firebase-config.js"></script>
-
-  <script>
-    document.getElementById('year').textContent = new Date().getFullYear();
-
-    // Hamburger menu toggle voor mobiel
-    const hamburgerBtn = document.getElementById('hamburger-btn');
-    const navbarLinks  = document.getElementById('navbar-links');
-
-    hamburgerBtn.addEventListener('click', () => {
-      const isOpen = navbarLinks.classList.toggle('open');
-      hamburgerBtn.setAttribute('aria-expanded', isOpen);
-    });
-
-    document.addEventListener('click', e => {
-      if (!hamburgerBtn.contains(e.target) && !navbarLinks.contains(e.target)) {
-        navbarLinks.classList.remove('open');
-        hamburgerBtn.setAttribute('aria-expanded', 'false');
-      }
-    });
-
-    // Toon dashboard-link als admin is ingelogd
-    auth.onAuthStateChanged(user => {
-      const navDash = document.getElementById('nav-dashboard');
-      if (navDash) navDash.style.display = user ? 'inline-block' : 'none';
-    });
-  </script>
+  <!-- ========== SCRIPTS ========== -->
+  <script type="module" src="/js/index.js"></script>
 
 </body>
 </html>

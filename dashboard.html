@@ -10,9 +10,6 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="css/dashboard.css">
-
-  <!-- Quill rich-text editor stijlen (CDN) -->
-  <link href="https://cdn.quilljs.com/1.3.7/quill.snow.css" rel="stylesheet">
 </head>
 <body class="dashboard-body">
 
@@ -533,35 +530,9 @@
     </div>
   </div>
 
-  <!-- ==========================================
-       FIREBASE SDK (via CDN)
-       ========================================== -->
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
-
-  <!-- Quill rich-text editor (CDN) -->
-  <script src="https://cdn.quilljs.com/1.3.7/quill.min.js"></script>
-
-  <!-- Firebase configuratie en initialisatie -->
-  <script src="js/firebase-config.js"></script>
-
-  <!-- Dashboard logica -->
-  <script src="js/dashboard.js"></script>
-
-  <!-- Nico AI logica -->
-  <script src="js/nico-ai.js"></script>
-
-  <!-- Tab-navigatie initialiseren: toon eerste sectie bij laden -->
-  <script>
-    // Zorg dat de eerste sectie (Overzicht) zichtbaar is bij laden
-    document.addEventListener('DOMContentLoaded', () => {
-      document.querySelectorAll('.dash-section').forEach((s, i) => {
-        s.style.display = i === 0 ? 'block' : 'none';
-      });
-    });
-  </script>
+  <!-- ========== SCRIPTS ========== -->
+  <!-- Dashboard logica (Firebase v10 modulaire SDK + Quill via npm) -->
+  <script type="module" src="/js/dashboard.js"></script>
 
 </body>
 </html>

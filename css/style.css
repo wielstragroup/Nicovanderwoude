@@ -120,8 +120,14 @@ a:hover { color: var(--gold); }
   width: 22px;
   height: 1px;
   background: var(--text);
-  transition: transform .25s;
+  transition: transform .3s ease, opacity .3s ease;
+  transform-origin: center;
 }
+
+/* Hamburger → X animatie */
+.hamburger.is-open span:nth-child(1) { transform: translateY(7px) rotate(45deg);  }
+.hamburger.is-open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+.hamburger.is-open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 
 /* ===== HERO SECTIE ===== */
 .hero {
@@ -729,6 +735,7 @@ footer a:hover { color: var(--gold-lt); }
     padding: 1.5rem 2.5rem;
     gap: .125rem;
     box-shadow: var(--shadow-lg);
+    animation: slideDown .25s ease;
   }
   .navbar-links.open { display: flex; }
   .navbar-links a    { padding: .75rem 0; width: 100%; border-bottom: 1px solid var(--border-lt); }
@@ -742,4 +749,83 @@ footer a:hover { color: var(--gold-lt); }
   .container { padding: 2rem 1.5rem; }
   .blog-card-body { padding: 1.25rem 1.5rem; }
 }
+
+/* ===== ANIMATIES ===== */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Pagina-inhoud verschijnt zacht bij laden */
+.container, .hero { animation: fadeIn .4s ease both; }
+
+/* Blog cards: staggered fade-in */
+.blog-card {
+  animation: fadeIn .35s ease both;
+}
+
+/* Verbeterde blog-card hover met subtiele lift */
+.blog-card {
+  box-shadow: none;
+  transition: background .25s, box-shadow .25s, transform .25s;
+}
+.blog-card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+/* Zorg dat afbeelding overflow netjes is bij transform */
+.blog-card { overflow: hidden; }
+
+/* Betere focus-stijl voor toegankelijkheid */
+:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+}
+
+/* Laadstatus animatie */
+#loading-blogs::after {
+  content: '';
+  display: block;
+  width: 32px;
+  height: 1px;
+  background: var(--gold);
+  margin: 1rem auto 0;
+  animation: loadingPulse 1.2s ease-in-out infinite;
+}
+
+@keyframes loadingPulse {
+  0%, 100% { opacity: .25; transform: scaleX(.5); }
+  50%       { opacity: 1;   transform: scaleX(1); }
+}
+
+/* Verbeterde blockquote stijl */
+.blog-full-content blockquote {
+  position: relative;
+}
+.blog-full-content blockquote::before {
+  content: '\201C';
+  position: absolute;
+  left: -.1rem;
+  top: -.75rem;
+  font-family: var(--font-serif);
+  font-size: 3rem;
+  color: var(--gold);
+  opacity: .35;
+  line-height: 1;
+}
+
+/* Footer verbetering: subtiele scheiding */
+footer {
+  background: var(--text);
+  border-top: 2px solid var(--gold-dk);
+}
+
+/* Scroll-to-top smooth op safari */
+html { scroll-behavior: smooth; }
 

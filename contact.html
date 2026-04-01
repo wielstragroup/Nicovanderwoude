@@ -107,87 +107,8 @@
     </p>
   </footer>
 
-  <!-- ========== FIREBASE SDK (via CDN) ========== -->
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
-
-  <!-- Firebase configuratie en initialisatie -->
-  <script src="js/firebase-config.js"></script>
-
-  <script>
-    document.getElementById('year').textContent = new Date().getFullYear();
-
-    // Hamburger menu toggle voor mobiel
-    const hamburgerBtn = document.getElementById('hamburger-btn');
-    const navbarLinks  = document.getElementById('navbar-links');
-
-    hamburgerBtn.addEventListener('click', () => {
-      const isOpen = navbarLinks.classList.toggle('open');
-      hamburgerBtn.setAttribute('aria-expanded', isOpen);
-    });
-
-    document.addEventListener('click', e => {
-      if (!hamburgerBtn.contains(e.target) && !navbarLinks.contains(e.target)) {
-        navbarLinks.classList.remove('open');
-        hamburgerBtn.setAttribute('aria-expanded', 'false');
-      }
-    });
-
-    // Toon dashboard-link als admin is ingelogd
-    auth.onAuthStateChanged(user => {
-      const navDash = document.getElementById('nav-dashboard');
-      if (navDash) navDash.style.display = user ? 'inline-block' : 'none';
-    });
-
-    // Contactformulier verwerken: sla bericht op in Firestore
-    const contactForm     = document.getElementById('contact-form');
-    const contactFeedback = document.getElementById('contact-feedback');
-
-    contactForm.addEventListener('submit', async e => {
-      e.preventDefault();
-      contactFeedback.textContent = '';
-      contactFeedback.style.color = '';
-
-      const name    = document.getElementById('contact-name').value.trim();
-      const email   = document.getElementById('contact-email').value.trim();
-      const subject = document.getElementById('contact-subject').value.trim();
-      const message = document.getElementById('contact-message').value.trim();
-
-      if (!name || !email || !message) {
-        contactFeedback.textContent = '⚠️ Vul alle verplichte velden in.';
-        contactFeedback.style.color = '#c0392b';
-        return;
-      }
-
-      const submitBtn = contactForm.querySelector('button[type="submit"]');
-      submitBtn.disabled = true;
-      submitBtn.textContent = 'Versturen...';
-
-      try {
-        await db.collection('contact_messages').add({
-          name,
-          email,
-          subject,
-          message,
-          read:      false,
-          createdAt: firebase.firestore.FieldValue.serverTimestamp()
-        });
-
-        contactForm.reset();
-        contactFeedback.textContent = '✅ Bericht verzonden! Ik neem zo snel mogelijk contact met je op.';
-        contactFeedback.style.color = '#4a9268';
-      } catch (err) {
-        console.error('Fout bij versturen bericht:', err);
-        contactFeedback.textContent = '❌ Er is iets misgegaan. Probeer het opnieuw.';
-        contactFeedback.style.color = '#c0392b';
-      } finally {
-        submitBtn.disabled = false;
-        submitBtn.textContent = '📨 Bericht versturen';
-      }
-    });
-  </script>
+  <!-- ========== SCRIPTS ========== -->
+  <script type="module" src="/js/contact.js"></script>
 
 </body>
 </html>

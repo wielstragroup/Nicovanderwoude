@@ -9,63 +9,84 @@
  * - Paginaweergaven bijhouden (simpele view counter)
  */
 
+import { auth, db }           from './firebase-config.js';
+import { onAuthStateChanged } from 'firebase/auth';
+import {
+  collection, doc, getDoc, addDoc, updateDoc,
+  query, where, orderBy, onSnapshot,
+  serverTimestamp, increment,
+} from 'firebase/firestore';
+
+/* ===== JAAR IN FOOTER ===== */
+document.getElementById('year').textContent = new Date().getFullYear();
+
+/* ===== HAMBURGER MENU ===== */
+const hamburgerBtn = document.getElementById('hamburger-btn');
+const navbarLinks  = document.getElementById('navbar-links');
+
+if (hamburgerBtn) {
+  hamburgerBtn.addEventListener('click', () => {
+    const isOpen = navbarLinks.classList.toggle('open');
+    hamburgerBtn.setAttribute('aria-expanded', isOpen);
+    hamburgerBtn.classList.toggle('is-open', isOpen);
+  });
+
+  document.addEventListener('click', e => {
+    if (!hamburgerBtn.contains(e.target) && !navbarLinks.contains(e.target)) {
+      navbarLinks.classList.remove('open');
+      hamburgerBtn.setAttribute('aria-expanded', 'false');
+      hamburgerBtn.classList.remove('is-open');
+    }
+  });
+}
+
 /* ===== GLOBALE STAAT ===== */
-let currentBlogId = null; // ID van de momenteel bekeken blog
+let currentBlogId = null;
 
 /* ===== DOM-REFERENTIES ===== */
-const homeSection       = document.getElementById('home-section');
-const blogSection       = document.getElementById('blog-section');
-const blogsGrid         = document.getElementById('blogs-grid');
-const blogContent       = document.getElementById('blog-content');
-const commentsList      = document.getElementById('comments-list');
-const commentForm       = document.getElementById('comment-form');
-const searchInput       = document.getElementById('search-input');
-const categoryFilter    = document.getElementById('category-filter');
-const navDashboardLink  = document.getElementById('nav-dashboard');
-const backBtn           = document.getElementById('back-btn');
-const loadingBlogs      = document.getElementById('loading-blogs');
+const homeSection      = document.getElementById('home-section');
+const blogSection      = document.getElementById('blog-section');
+const blogsGrid        = document.getElementById('blogs-grid');
+const blogContent      = document.getElementById('blog-content');
+const commentsList     = document.getElementById('comments-list');
+const commentForm      = document.getElementById('comment-form');
+const searchInput      = document.getElementById('search-input');
+const categoryFilter   = document.getElementById('category-filter');
+const navDashboardLink = document.getElementById('nav-dashboard');
+const backBtn          = document.getElementById('back-btn');
+const loadingBlogs     = document.getElementById('loading-blogs');
 
 /* ===== AUTHENTICATIE: admin-link tonen/verbergen ===== */
-auth.onAuthStateChanged(user => {
-  // Toon de Dashboard-link in de navigatie alleen als er een admin is ingelogd
+onAuthStateChanged(auth, user => {
   if (navDashboardLink) {
     navDashboardLink.style.display = user ? 'inline-block' : 'none';
   }
 });
 
 /* ===== BLOGS LADEN ===== */
-/**
- * Laad gepubliceerde blogs realtime uit Firestore.
- * Reageert op filter- en zoekwijzigingen.
- */
-let blogsUnsubscribe = null; // Houdt de realtime listener bij zodat we hem kunnen afmelden
+let blogsUnsubscribe = null;
 
 function loadBlogs() {
   if (loadingBlogs) loadingBlogs.style.display = 'block';
 
-  const searchTerm     = searchInput  ? searchInput.value.trim().toLowerCase()  : '';
-  const selectedCat    = categoryFilter ? categoryFilter.value : '';
+  const searchTerm  = searchInput    ? searchInput.value.trim().toLowerCase() : '';
+  const selectedCat = categoryFilter ? categoryFilter.value                   : '';
 
-  // Verwijder vorige listener om duplicaten te voorkomen
   if (blogsUnsubscribe) blogsUnsubscribe();
 
-  // Query: alleen gepubliceerde blogs, gesorteerd op publicatiedatum
-  let query = db.collection('blogs')
-    .where('status', '==', 'published')
-    .orderBy('publishedAt', 'desc');
+  const constraints = [
+    where('status', '==', 'published'),
+    orderBy('publishedAt', 'desc'),
+  ];
+  if (selectedCat) constraints.push(where('category', '==', selectedCat));
 
-  // Categorie-filter toepassen indien geselecteerd
-  if (selectedCat) {
-    query = query.where('category', '==', selectedCat);
-  }
+  const q = query(collection(db, 'blogs'), ...constraints);
 
-  // Realtime listener: bijwerken zodra data in Firestore verandert
-  blogsUnsubscribe = query.onSnapshot(snapshot => {
+  blogsUnsubscribe = onSnapshot(q, snapshot => {
     if (loadingBlogs) loadingBlogs.style.display = 'none';
     let blogs = [];
-    snapshot.forEach(doc => blogs.push({ id: doc.id, ...doc.data() }));
+    snapshot.forEach(d => blogs.push({ id: d.id, ...d.data() }));
 
-    // Zoekfilter toepassen (client-side, Firestore ondersteunt geen fulltext search)
     if (searchTerm) {
       blogs = blogs.filter(b =>
         b.title.toLowerCase().includes(searchTerm) ||
@@ -75,26 +96,22 @@ function loadBlogs() {
     }
 
     renderBlogs(blogs);
-    populateCategoryFilter(snapshot); // Vul de categorielijst bij
+    populateCategoryFilter(snapshot);
   }, err => {
     console.error('Fout bij laden blogs:', err);
     if (loadingBlogs) loadingBlogs.style.display = 'none';
   });
 }
 
-/**
- * Vul het categorie-dropdown menu met unieke categorieën uit de blogs.
- */
 function populateCategoryFilter(snapshot) {
   if (!categoryFilter) return;
   const categories = new Set();
-  snapshot.forEach(doc => {
-    const cat = doc.data().category;
+  snapshot.forEach(d => {
+    const cat = d.data().category;
     if (cat) categories.add(cat);
   });
 
   const currentVal = categoryFilter.value;
-  // Behoud bestaande 'Alle categorieën' optie
   categoryFilter.innerHTML = '<option value="">Alle categorieën</option>';
   categories.forEach(cat => {
     const opt = document.createElement('option');
@@ -105,9 +122,6 @@ function populateCategoryFilter(snapshot) {
   });
 }
 
-/**
- * Toon de lijst met blogs als kaarten in het overzicht.
- */
 function renderBlogs(blogs) {
   if (!blogsGrid) return;
 
@@ -128,8 +142,7 @@ function renderBlogs(blogs) {
       : stripHtml(blog.content || '').substring(0, 150) + '...';
 
     return `
-      <article class="blog-card" onclick="openBlog('${blog.id}')">
-        ${img}
+      <article class="blog-card" data-blog-id="${blog.id}" style="cursor:pointer;" role="button" tabindex="0" aria-label="${escapeHtml(blog.title)}">${img}
         <div class="blog-card-body">
           ${blog.category ? `<span class="category-badge">${escapeHtml(blog.category)}</span>` : ''}
           <h2 class="blog-card-title">${escapeHtml(blog.title)}</h2>
@@ -146,41 +159,44 @@ function renderBlogs(blogs) {
 }
 
 /* ===== ENKELE BLOG BEKIJKEN ===== */
-/**
- * Open een enkele blog op basis van het ID.
- * Verhoogt de view counter en laadt reacties realtime.
- */
 function openBlog(blogId) {
   currentBlogId = blogId;
 
-  // Sectie wisselen
   homeSection.style.display = 'none';
   blogSection.style.display = 'block';
   window.scrollTo(0, 0);
 
-  // URL aanpassen zonder pagina te herladen (voor bookmarks en terug-knop)
   history.pushState({ blogId }, '', `?blog=${blogId}`);
 
-  // Blog data ophalen
-  db.collection('blogs').doc(blogId).get().then(doc => {
-    if (!doc.exists) {
+  getDoc(doc(db, 'blogs', blogId)).then(blogSnap => {
+    if (!blogSnap.exists) {
       blogContent.innerHTML = '<p>Blog niet gevonden.</p>';
       return;
     }
-    const blog = { id: doc.id, ...doc.data() };
+    const blog = { id: blogSnap.id, ...blogSnap.data() };
     renderBlogContent(blog);
     loadComments(blogId);
 
-    // View counter ophogen (atomisch via Firestore increment)
-    db.collection('blogs').doc(blogId).update({
-      views: firebase.firestore.FieldValue.increment(1)
+    updateDoc(doc(db, 'blogs', blogId), {
+      views: increment(1),
     }).catch(err => console.warn('View counter kon niet worden bijgewerkt:', err));
   });
 }
 
-/**
- * Render de volledige inhoud van een blog.
- */
+/* ===== EVENT DELEGATION VOOR BLOG CARDS ===== */
+if (blogsGrid) {
+  blogsGrid.addEventListener('click', e => {
+    const card = e.target.closest('[data-blog-id]');
+    if (card) openBlog(card.dataset.blogId);
+  });
+  blogsGrid.addEventListener('keydown', e => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      const card = e.target.closest('[data-blog-id]');
+      if (card) { e.preventDefault(); openBlog(card.dataset.blogId); }
+    }
+  });
+}
+
 function renderBlogContent(blog) {
   const date = blog.publishedAt ? formatDate(blog.publishedAt.toDate()) : '';
   const img  = blog.imageUrl
@@ -203,28 +219,25 @@ function renderBlogContent(blog) {
 }
 
 /* ===== REACTIES ===== */
-let commentsUnsubscribe = null; // Houdt realtime comments-listener bij
+let commentsUnsubscribe = null;
 
-/**
- * Laad goedgekeurde reacties realtime voor een blog.
- */
 function loadComments(blogId) {
   if (commentsUnsubscribe) commentsUnsubscribe();
 
-  commentsUnsubscribe = db.collection('comments')
-    .where('blogId', '==', blogId)
-    .where('approved', '==', true)
-    .orderBy('createdAt', 'asc')
-    .onSnapshot(snapshot => {
-      renderComments(snapshot);
-    }, err => {
-      console.error('Fout bij laden reacties:', err);
-    });
+  const q = query(
+    collection(db, 'comments'),
+    where('blogId', '==', blogId),
+    where('approved', '==', true),
+    orderBy('createdAt', 'asc')
+  );
+
+  commentsUnsubscribe = onSnapshot(q, snapshot => {
+    renderComments(snapshot);
+  }, err => {
+    console.error('Fout bij laden reacties:', err);
+  });
 }
 
-/**
- * Toon de reacties in de comments-sectie.
- */
 function renderComments(snapshot) {
   if (!commentsList) return;
 
@@ -233,8 +246,8 @@ function renderComments(snapshot) {
     return;
   }
 
-  commentsList.innerHTML = snapshot.docs.map(doc => {
-    const c    = doc.data();
+  commentsList.innerHTML = snapshot.docs.map(d => {
+    const c    = d.data();
     const date = c.createdAt ? formatDate(c.createdAt.toDate()) : '';
     return `
       <div class="comment">
@@ -247,10 +260,6 @@ function renderComments(snapshot) {
   }).join('');
 }
 
-/**
- * Reactieformulier verwerken: sla nieuwe reactie op in Firestore.
- * Reacties starten als 'niet goedgekeurd' (wacht op admin-goedkeuring).
- */
 if (commentForm) {
   commentForm.addEventListener('submit', async e => {
     e.preventDefault();
@@ -263,7 +272,6 @@ if (commentForm) {
 
     if (!name || !text) return;
 
-    // Basisspamcheck: te korte of te lange reacties weigeren
     if (text.length < 3) {
       showNotification('Reactie is te kort.', 'error');
       return;
@@ -277,14 +285,14 @@ if (commentForm) {
     submitBtn.textContent = 'Plaatsen...';
 
     try {
-      await db.collection('comments').add({
+      await addDoc(collection(db, 'comments'), {
         blogId:    currentBlogId,
-        name:      name,
-        text:      text,
-        approved:  false,          // Wacht op goedkeuring door admin
+        name,
+        text,
+        approved:  false,
         spam:      false,
         read:      false,
-        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        createdAt: serverTimestamp(),
       });
 
       nameInput.value = '';
@@ -301,9 +309,6 @@ if (commentForm) {
 }
 
 /* ===== NAVIGATIE ===== */
-/**
- * Terugknop: ga terug naar het blogoverzicht.
- */
 if (backBtn) {
   backBtn.addEventListener('click', () => {
     blogSection.style.display = 'none';
@@ -315,7 +320,6 @@ if (backBtn) {
   });
 }
 
-// Terug-knop van de browser afhandelen
 window.addEventListener('popstate', e => {
   if (e.state && e.state.blogId) {
     openBlog(e.state.blogId);
@@ -328,7 +332,6 @@ window.addEventListener('popstate', e => {
 });
 
 /* ===== ZOEKEN & FILTEREN ===== */
-// Zoeken met debounce om niet bij elke toetsaanslag te zoeken
 let searchDebounce;
 if (searchInput) {
   searchInput.addEventListener('input', () => {
@@ -337,46 +340,35 @@ if (searchInput) {
   });
 }
 
-// Categorie-filter direct toepassen
 if (categoryFilter) {
   categoryFilter.addEventListener('change', loadBlogs);
 }
 
 /* ===== PAGINA INITIALISATIE ===== */
-// Controleer of er een blog-ID in de URL staat (voor directe links)
 const urlParams = new URLSearchParams(window.location.search);
 const urlBlogId = urlParams.get('blog');
 
 if (urlBlogId) {
   openBlog(urlBlogId);
 } else {
-  loadBlogs(); // Laad het blogoverzicht
+  loadBlogs();
 }
 
 /* ===== HULPFUNCTIES ===== */
-/**
- * Formatteer een JavaScript Date naar een leesbare Nederlandse datum.
- */
 function formatDate(date) {
   return date.toLocaleDateString('nl-NL', {
     day:   '2-digit',
     month: 'long',
-    year:  'numeric'
+    year:  'numeric',
   });
 }
 
-/**
- * Verwijder HTML-tags uit een tekst (voor excerpt-generatie).
- */
 function stripHtml(html) {
   const tmp = document.createElement('div');
   tmp.innerHTML = html;
   return tmp.textContent || tmp.innerText || '';
 }
 
-/**
- * Escape HTML-tekens om XSS te voorkomen.
- */
 function escapeHtml(str) {
   if (!str) return '';
   return String(str)
@@ -387,9 +379,6 @@ function escapeHtml(str) {
     .replace(/'/g,  '&#039;');
 }
 
-/**
- * Toon een tijdelijke notificatie (toast) boven aan het scherm.
- */
 function showNotification(message, type = 'info') {
   const toast = document.createElement('div');
   toast.className = `toast toast-${type}`;

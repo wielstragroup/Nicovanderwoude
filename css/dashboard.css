@@ -728,6 +728,65 @@ tbody tr.unread-row    { background: rgba(184,150,90,.05); }
   color: #1a1814;
 }
 
+/* ===== NICO AI ===== */
+.ai-card {
+  background: #ffffff;
+  border: 1px solid #e4dcd0;
+  border-radius: 0;
+  padding: 2rem;
+  margin-bottom: 1px;
+}
+
+.ai-card-title {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 1.4rem;
+  font-weight: 400;
+  font-style: italic;
+  color: #1a1814;
+  margin-bottom: .5rem;
+}
+
+.ai-card-desc {
+  color: #8a806f;
+  font-size: .82rem;
+  margin-bottom: 1.5rem;
+  line-height: 1.7;
+  letter-spacing: .02em;
+}
+
+.ai-output-wrapper {
+  margin-top: 1.5rem;
+}
+
+.ai-output-label {
+  display: block;
+  font-weight: 500;
+  font-size: .68rem;
+  color: #8a806f;
+  text-transform: uppercase;
+  letter-spacing: .14em;
+  margin-bottom: .5rem;
+}
+
+.ai-output {
+  background: #faf8f5;
+  border: 1px solid #e4dcd0;
+  border-radius: 0;
+  padding: 1.25rem 1.5rem;
+  font-size: .9rem;
+  line-height: 1.85;
+  color: #1a1814;
+  font-weight: 300;
+  min-height: 120px;
+  white-space: pre-wrap;
+  word-break: break-word;
+  margin-bottom: .75rem;
+}
+
+.ai-copy-btn {
+  margin-top: .25rem;
+}
+
 /* ===== RESPONSIVE ===== */
 @media (max-width: 768px) {
   .dash-content { padding: 1.5rem 1.25rem; }
@@ -742,4 +801,68 @@ tbody tr.unread-row    { background: rgba(184,150,90,.05); }
 @media (max-width: 480px) {
   .stats-grid { grid-template-columns: 1fr 1fr; }
   .login-card { padding: 2.5rem 1.75rem; }
+}
+
+/* ===== ANIMATIES ===== */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes dashFadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* Login-kaart verschijnt zacht */
+.login-card { animation: fadeInUp .4s ease both; }
+
+/* Dashboard content fade in */
+.dash-content { animation: dashFadeIn .3s ease; }
+
+/* Stat-kaarten: kleine lift bij hover */
+.stat-card {
+  transition: background .2s, transform .2s, box-shadow .2s;
+}
+.stat-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(184,150,90,.12);
+}
+
+/* Sectie-overgang: zacht verschijnen */
+.dash-section {
+  animation: fadeInUp .25s ease both;
+}
+
+/* Toast animatie verbeterd */
+.toast {
+  transition: opacity .3s ease, transform .3s ease;
+}
+
+/* Verbeterde tab-indicator overgang */
+.dash-nav-btn {
+  transition: color .2s ease, border-color .2s ease;
+}
+
+/* Focus-stijl voor toegankelijkheid */
+:focus-visible {
+  outline: 2px solid #b8965a;
+  outline-offset: 2px;
+}
+
+/* Betere media-item hover */
+.media-item {
+  transition: opacity .2s, transform .2s;
+}
+.media-item:hover {
+  opacity: 1 !important;
+  transform: translateY(-2px);
+}
+
+/* Verbeterde AI-kaart */
+.ai-card {
+  transition: box-shadow .2s;
+}
+.ai-card:hover {
+  box-shadow: 0 4px 20px rgba(26,24,20,.06);
 }

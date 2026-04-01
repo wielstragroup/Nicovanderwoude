@@ -1,0 +1,30 @@
+{
+  "name": "nicovanderwoude",
+  "version": "1.0.0",
+  "description": "Een complete blogsite met admin-dashboard, gebouwd met HTML, CSS, JavaScript en Firebase. Klaar voor hosting op GitHub Pages.",
+  "main": "index.js",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wielstragroup/Nicovanderwoude.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/wielstragroup/Nicovanderwoude/issues"
+  },
+  "homepage": "https://github.com/wielstragroup/Nicovanderwoude#readme",
+  "dependencies": {
+    "firebase": "^12.11.0",
+    "quill": "^2.0.3"
+  },
+  "devDependencies": {
+    "vite": "^8.0.3"
+  }
+}

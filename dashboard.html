@@ -80,6 +80,7 @@
       <button class="dash-nav-btn"        data-target="media">🖼️ Media</button>
       <button class="dash-nav-btn"        data-target="users">👥 Gebruikers</button>
       <button class="dash-nav-btn"        data-target="trash">🗑️ Prullenbak</button>
+      <button class="dash-nav-btn"        data-target="nicoai">🤖 Nico AI</button>
     </nav>
 
     <main class="dash-content">
@@ -406,6 +407,91 @@
         <div id="trash-list" aria-live="polite"></div>
       </section>
 
+      <!-- ==========================================
+           SECTIE: NICO AI
+           ========================================== -->
+      <section id="section-nicoai" class="dash-section" aria-label="Nico AI">
+        <div class="section-header">
+          <h2>🤖 Nico AI</h2>
+        </div>
+        <p style="color:#8a806f;margin-bottom:2rem;font-size:.85rem;letter-spacing:.04em;">
+          Gebruik Google Gemini om teksten te schrijven, bestaande teksten te verbeteren of ideeën te brainstormen.
+        </p>
+
+        <!-- ===== SECTIE 1: TEKSTEN SCHRIJVEN ===== -->
+        <div class="ai-card">
+          <h3 class="ai-card-title">✍️ Nieuwe Tekst Genereren</h3>
+          <p class="ai-card-desc">Geef een onderwerp of instructie op en laat Nico AI een blogpost voor je schrijven.</p>
+
+          <div class="form-group">
+            <label for="schrijfInput">Onderwerp of instructie</label>
+            <textarea
+              id="schrijfInput"
+              placeholder="Bijv. de toekomst van duurzame energie in Nederland..."
+              rows="4"></textarea>
+          </div>
+
+          <button id="genereerTekstBtn" class="btn btn-primary">
+            ✨ Genereer Tekst
+          </button>
+
+          <div class="ai-output-wrapper" id="schrijfOutputWrapper" style="display:none;">
+            <label class="ai-output-label">Gegenereerde tekst</label>
+            <div class="ai-output" id="schrijfOutput" aria-live="polite"></div>
+            <button class="btn btn-secondary btn-sm ai-copy-btn" data-target="schrijfOutput">📋 Kopiëren</button>
+          </div>
+        </div>
+
+        <!-- ===== SECTIE 2: TEKSTEN VERBETEREN ===== -->
+        <div class="ai-card">
+          <h3 class="ai-card-title">🔍 Tekst Verbeteren</h3>
+          <p class="ai-card-desc">Plak een bestaande tekst en laat Nico AI deze controleren op grammatica, spelling en zinsbouw.</p>
+
+          <div class="form-group">
+            <label for="verbeterInput">Te verbeteren tekst</label>
+            <textarea
+              id="verbeterInput"
+              placeholder="Plak hier de tekst die je wilt laten verbeteren..."
+              rows="6"></textarea>
+          </div>
+
+          <button id="verbeterTekstBtn" class="btn btn-primary">
+            🔧 Verbeter Tekst
+          </button>
+
+          <div class="ai-output-wrapper" id="verbeterOutputWrapper" style="display:none;">
+            <label class="ai-output-label">Verbeterde tekst</label>
+            <div class="ai-output" id="verbeterOutput" aria-live="polite"></div>
+            <button class="btn btn-secondary btn-sm ai-copy-btn" data-target="verbeterOutput">📋 Kopiëren</button>
+          </div>
+        </div>
+
+        <!-- ===== SECTIE 3: BRAINSTORMER ===== -->
+        <div class="ai-card">
+          <h3 class="ai-card-title">💡 Brainstorm met Nico AI</h3>
+          <p class="ai-card-desc">Geef een thema op en ontvang vijf unieke blogpost-ideeën om mee te werken.</p>
+
+          <div class="form-group">
+            <label for="brainstormInput">Onderwerp of thema</label>
+            <textarea
+              id="brainstormInput"
+              placeholder="Bijv. reizen met een beperkt budget, gezond eten..."
+              rows="4"></textarea>
+          </div>
+
+          <button id="brainstormBtn" class="btn btn-primary">
+            🧠 Brainstorm!
+          </button>
+
+          <div class="ai-output-wrapper" id="brainstormOutputWrapper" style="display:none;">
+            <label class="ai-output-label">Brainstorm-ideeën</label>
+            <div class="ai-output" id="brainstormOutput" aria-live="polite"></div>
+            <button class="btn btn-secondary btn-sm ai-copy-btn" data-target="brainstormOutput">📋 Kopiëren</button>
+          </div>
+        </div>
+
+      </section><!-- /section-nicoai -->
+
     </main><!-- /dash-content -->
   </div><!-- /dashboard-main -->
 
@@ -463,6 +549,9 @@
 
   <!-- Dashboard logica -->
   <script src="js/dashboard.js"></script>
+
+  <!-- Nico AI logica -->
+  <script src="js/nico-ai.js"></script>
 
   <!-- Tab-navigatie initialiseren: toon eerste sectie bij laden -->
   <script>

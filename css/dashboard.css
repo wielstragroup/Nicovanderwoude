@@ -728,6 +728,65 @@ tbody tr.unread-row    { background: rgba(184,150,90,.05); }
   color: #1a1814;
 }
 
+/* ===== NICO AI ===== */
+.ai-card {
+  background: #ffffff;
+  border: 1px solid #e4dcd0;
+  border-radius: 0;
+  padding: 2rem;
+  margin-bottom: 1px;
+}
+
+.ai-card-title {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 1.4rem;
+  font-weight: 400;
+  font-style: italic;
+  color: #1a1814;
+  margin-bottom: .5rem;
+}
+
+.ai-card-desc {
+  color: #8a806f;
+  font-size: .82rem;
+  margin-bottom: 1.5rem;
+  line-height: 1.7;
+  letter-spacing: .02em;
+}
+
+.ai-output-wrapper {
+  margin-top: 1.5rem;
+}
+
+.ai-output-label {
+  display: block;
+  font-weight: 500;
+  font-size: .68rem;
+  color: #8a806f;
+  text-transform: uppercase;
+  letter-spacing: .14em;
+  margin-bottom: .5rem;
+}
+
+.ai-output {
+  background: #faf8f5;
+  border: 1px solid #e4dcd0;
+  border-radius: 0;
+  padding: 1.25rem 1.5rem;
+  font-size: .9rem;
+  line-height: 1.85;
+  color: #1a1814;
+  font-weight: 300;
+  min-height: 120px;
+  white-space: pre-wrap;
+  word-break: break-word;
+  margin-bottom: .75rem;
+}
+
+.ai-copy-btn {
+  margin-top: .25rem;
+}
+
 /* ===== RESPONSIVE ===== */
 @media (max-width: 768px) {
   .dash-content { padding: 1.5rem 1.25rem; }

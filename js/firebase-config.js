@@ -6,14 +6,15 @@
  * Je kunt deze vinden in de Firebase console → Projectinstellingen → Jouw apps.
  */
 
-// Firebase project configuratie (placeholder - vervangen met eigen waarden)
+// Firebase project configuratie
 const firebaseConfig = {
-  apiKey:            "JOUW_API_KEY",
-  authDomain:        "JOUW_PROJECT.firebaseapp.com",
-  projectId:         "JOUW_PROJECT_ID",
-  storageBucket:     "JOUW_PROJECT.appspot.com",
-  messagingSenderId: "JOUW_SENDER_ID",
-  appId:             "JOUW_APP_ID"
+  apiKey:            "AIzaSyAyqDFKIVgf43M-cFaAhXcpaa54YQWkGCk",
+  authDomain:        "nicovanderwoude-be15f.firebaseapp.com",
+  projectId:         "nicovanderwoude-be15f",
+  storageBucket:     "nicovanderwoude-be15f.firebasestorage.app",
+  messagingSenderId: "1003142316643",
+  appId:             "1:1003142316643:web:dca78380bc912f38b12e56",
+  measurementId:     "G-ZPE4MCXKKT"
 };
 
 // Firebase initialiseren met de opgegeven configuratie

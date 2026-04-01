@@ -638,7 +638,80 @@ footer {
 footer a { color: var(--gold); }
 footer a:hover { color: var(--gold-lt); }
 
-/* ===== RESPONSIVE ===== */
+/* ===== HOME CARDS ===== */
+.home-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 2px;
+  background: var(--border);
+  margin-top: 1rem;
+}
+
+.home-card {
+  background: var(--surface);
+  padding: 2.5rem 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: .75rem;
+  text-decoration: none;
+  color: var(--text);
+  transition: background .25s;
+}
+
+.home-card:hover {
+  background: var(--surface-2);
+  color: var(--text);
+}
+
+.home-card-icon {
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.home-card-title {
+  font-family: var(--font-serif);
+  font-size: 1.5rem;
+  font-weight: 400;
+  font-style: italic;
+  color: var(--text);
+}
+
+.home-card-text {
+  color: var(--text-muted);
+  font-size: .875rem;
+  line-height: 1.8;
+  font-weight: 300;
+  flex: 1;
+}
+
+.home-card-link {
+  font-size: .72rem;
+  font-weight: 500;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-top: .5rem;
+}
+
+/* ===== CONTACT FORMULIER ===== */
+.contact-wrapper {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.contact-form {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  padding: 2.5rem 2.25rem;
+}
+
+/* ===== ACTIVE NAV LINK ===== */
+.navbar-links a.active {
+  color: var(--gold);
+  border-bottom-color: var(--gold);
+}
+
+
 @media (max-width: 768px) {
   .blogs-grid { grid-template-columns: 1fr; gap: 0; }
   .filter-bar { flex-direction: column; }

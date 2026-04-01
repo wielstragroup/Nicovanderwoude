@@ -572,6 +572,13 @@ async function saveBlog(status) {
   try {
     if (editingBlogId) {
       // Bestaande blog bijwerken
+      // Als status wijzigt naar gepubliceerd, stel publishedAt in als dat nog niet bestaat
+      if (status === 'published') {
+        const existing = await db.collection('blogs').doc(editingBlogId).get();
+        if (!existing.data().publishedAt) {
+          blogData.publishedAt = scheduledAt || firebase.firestore.FieldValue.serverTimestamp();
+        }
+      }
       await db.collection('blogs').doc(editingBlogId).update(blogData);
     } else {
       // Nieuwe blog aanmaken

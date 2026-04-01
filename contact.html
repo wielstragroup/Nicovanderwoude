@@ -161,12 +161,6 @@
         return;
       }
 
-      if (message.length < 10) {
-        contactFeedback.textContent = '⚠️ Je bericht is te kort (min. 10 tekens).';
-        contactFeedback.style.color = '#c0392b';
-        return;
-      }
-
       const submitBtn = contactForm.querySelector('button[type="submit"]');
       submitBtn.disabled = true;
       submitBtn.textContent = 'Versturen...';

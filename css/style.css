@@ -699,6 +699,30 @@ footer a:hover { color: var(--gold-lt); }
   margin-top: .5rem;
 }
 
+/* ===== OVER MIJ SECTIE ===== */
+.about-section {
+  max-width: 68ch;
+  margin: 0 auto 4rem;
+  padding-bottom: 3.5rem;
+  border-bottom: var(--gold-line);
+}
+
+.about-section .section-title {
+  margin-bottom: 1.25rem;
+}
+
+.about-content {
+  font-size: .95rem;
+  line-height: 1.9;
+  color: #3a3530;
+  font-weight: 300;
+  white-space: pre-line;
+}
+
+.about-content p {
+  margin-bottom: 1rem;
+}
+
 /* ===== CONTACT FORMULIER ===== */
 .contact-wrapper {
   max-width: 600px;

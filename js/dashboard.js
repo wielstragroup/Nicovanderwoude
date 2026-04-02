@@ -165,6 +165,7 @@ onAuthStateChanged(auth, async user => {
     loadUsersList();
     loadMediaLibrary();
     loadTrash();
+    loadPageSettings();
     setupScheduledPublishing();
     initNicoAI(showDashNotification);
   } else {
@@ -893,6 +894,67 @@ async function deleteMedia(docId, url) {
 setupImageUpload(mediaDropZone, mediaFileInput, () => {
   showDashNotification('Afbeelding toegevoegd aan de media library.', 'success');
 });
+
+/* ===================================================================
+   PAGINA-INHOUD BEHEER (site_settings/homepage)
+   ================================================================= */
+
+const pagesForm         = document.getElementById('pages-form');
+const pageHeroTitle     = document.getElementById('page-hero-title');
+const pageHeroSubtitle  = document.getElementById('page-hero-subtitle');
+const pageAboutTitle    = document.getElementById('page-about-title');
+const pageAboutContent  = document.getElementById('page-about-content');
+const pagesFormFeedback = document.getElementById('pages-form-feedback');
+
+async function loadPageSettings() {
+  if (!pagesForm) return;
+  try {
+    const snap = await getDoc(doc(db, 'site_settings', 'homepage'));
+    if (!snap.exists()) return;
+    const data = snap.data();
+    if (pageHeroTitle    && data.heroTitle    != null) pageHeroTitle.value    = data.heroTitle;
+    if (pageHeroSubtitle && data.heroSubtitle != null) pageHeroSubtitle.value = data.heroSubtitle;
+    if (pageAboutTitle   && data.aboutTitle   != null) pageAboutTitle.value   = data.aboutTitle;
+    if (pageAboutContent && data.aboutContent != null) pageAboutContent.value = data.aboutContent;
+  } catch (err) {
+    console.warn('Kon paginainstellingen niet laden:', err);
+  }
+}
+
+if (pagesForm) {
+  pagesForm.addEventListener('submit', async e => {
+    e.preventDefault();
+    const btn = pagesForm.querySelector('button[type="submit"]');
+    btn.disabled = true;
+    btn.textContent = 'Opslaan...';
+    if (pagesFormFeedback) { pagesFormFeedback.textContent = ''; pagesFormFeedback.style.color = ''; }
+
+    try {
+      await setDoc(doc(db, 'site_settings', 'homepage'), {
+        heroTitle:    pageHeroTitle    ? pageHeroTitle.value.trim()    : '',
+        heroSubtitle: pageHeroSubtitle ? pageHeroSubtitle.value.trim() : '',
+        aboutTitle:   pageAboutTitle   ? pageAboutTitle.value.trim()   : '',
+        aboutContent: pageAboutContent ? pageAboutContent.value.trim()        : '',
+        updatedAt:    serverTimestamp(),
+      });
+      showDashNotification('Paginateksten opgeslagen!', 'success');
+      if (pagesFormFeedback) {
+        pagesFormFeedback.textContent = '✅ Wijzigingen opgeslagen.';
+        pagesFormFeedback.style.color = '#4a9268';
+      }
+    } catch (err) {
+      console.error('Fout bij opslaan paginateksten:', err);
+      showDashNotification('Fout bij opslaan. Probeer opnieuw.', 'error');
+      if (pagesFormFeedback) {
+        pagesFormFeedback.textContent = '❌ Fout bij opslaan. Probeer opnieuw.';
+        pagesFormFeedback.style.color = '#c0392b';
+      }
+    } finally {
+      btn.disabled = false;
+      btn.textContent = '💾 Wijzigingen opslaan';
+    }
+  });
+}
 
 /* ===================================================================
    HULPFUNCTIES

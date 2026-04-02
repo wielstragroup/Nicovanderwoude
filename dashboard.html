@@ -7,8 +7,11 @@
   <title>Dashboard – Nico van der Woude</title>
 
   <!-- Dashboard stijlen -->
+  <link rel="dns-prefetch" href="https://firestore.googleapis.com">
+  <link rel="dns-prefetch" href="https://identitytoolkit.googleapis.com">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,600&family=Jost:wght@300;400;500;600&display=swap">
   <link rel="stylesheet" href="css/dashboard.css">
 </head>
 <body class="dashboard-body">
@@ -77,6 +80,7 @@
       <button class="dash-nav-btn"        data-target="media">🖼️ Media</button>
       <button class="dash-nav-btn"        data-target="users">👥 Gebruikers</button>
       <button class="dash-nav-btn"        data-target="trash">🗑️ Prullenbak</button>
+      <button class="dash-nav-btn"        data-target="pages">📄 Pagina's</button>
       <button class="dash-nav-btn"        data-target="nicoai">🤖 Nico AI</button>
     </nav>
 
@@ -402,6 +406,71 @@
 
         <!-- Prullenbaklijst (gevuld via dashboard.js) -->
         <div id="trash-list" aria-live="polite"></div>
+      </section>
+
+      <!-- ==========================================
+           SECTIE: PAGINA-INHOUD BEHEER
+           ========================================== -->
+      <section id="section-pages" class="dash-section" aria-label="Paginabeheer">
+        <div class="section-header">
+          <h2>📄 Pagina-inhoud</h2>
+        </div>
+        <p style="color:#8a806f;font-size:.85rem;letter-spacing:.04em;margin-bottom:2rem;">
+          Pas hier de teksten op de homepage aan. Wijzigingen zijn direct zichtbaar voor bezoekers.
+        </p>
+
+        <form id="pages-form" novalidate style="max-width:700px;">
+
+          <!-- Hero sectie -->
+          <div class="sidebar-panel" style="margin-bottom:1.5rem;">
+            <h4>🦸 Hero (bovenkant homepage)</h4>
+
+            <div class="form-group">
+              <label for="page-hero-title">Hoofdtitel</label>
+              <input
+                type="text"
+                id="page-hero-title"
+                placeholder="Bijv. Nico van der Woude"
+                maxlength="100">
+            </div>
+
+            <div class="form-group">
+              <label for="page-hero-subtitle">Ondertitel / welkomsttekst</label>
+              <input
+                type="text"
+                id="page-hero-subtitle"
+                placeholder="Bijv. Welkom op mijn persoonlijke website..."
+                maxlength="300">
+            </div>
+          </div>
+
+          <!-- Over mij sectie -->
+          <div class="sidebar-panel" style="margin-bottom:1.5rem;">
+            <h4>🧑 Over mij</h4>
+
+            <div class="form-group">
+              <label for="page-about-title">Sectietitel</label>
+              <input
+                type="text"
+                id="page-about-title"
+                placeholder="Bijv. Over mij"
+                maxlength="100">
+            </div>
+
+            <div class="form-group">
+              <label for="page-about-content">Tekst (regeleinden worden bewaard; geen HTML)</label>
+              <textarea
+                id="page-about-content"
+                placeholder="Schrijf hier iets over jezelf..."
+                rows="10"
+                maxlength="5000"></textarea>
+            </div>
+          </div>
+
+          <div id="pages-form-feedback" role="alert" style="margin-bottom:1rem;font-size:.85rem;"></div>
+
+          <button type="submit" class="btn btn-primary">💾 Wijzigingen opslaan</button>
+        </form>
       </section>
 
       <!-- ==========================================

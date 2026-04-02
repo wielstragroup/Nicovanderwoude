@@ -5,8 +5,8 @@
  * Ivoor achtergrond · antiek goud · Cormorant Garamond
  */
 
-/* ===== GOOGLE FONTS ===== */
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,600&family=Jost:wght@300;400;500;600&display=swap');
+/* ===== GOOGLE FONTS =====
+   Lettertypen worden geladen via <link> in HTML voor betere performance. */
 
 /* ===== DASHBOARD LAYOUT ===== */
 body.dashboard-body {
